@@ -225,9 +225,10 @@ H1:hover {
     document.addEventListener("touchdown", onDown);
     
     var onMove = function(e) {
-        if(e.buttons & 1 || e.touches) {
-            var dx = (e.touches ? e.touches[0].pageX : e.pageX) - spot.x;
-            var dy = (e.touches ? e.touches[0].pageY : e.pageY) - spot.y;
+        var touches = e.changedTouches;
+        if(e.buttons & 1 || touches) {
+            var dx = (touches ? touches[0].pageX : e.pageX) - spot.x;
+            var dy = (touches ? touches[0].pageY : e.pageY) - spot.y;
             if(dy>10 && currentPlace=='main') {
                 moveMainDown();
             }
