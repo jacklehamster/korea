@@ -180,48 +180,50 @@
         }
     );
     var spot = {x:0,y:0};
-    document.addEventListener(
-        "mousedown",
-        function(e) {
+    
+    var onDown = function(e) {
+        var touches = e.changedTouches;
+        if(touches) {
+            spot.x = touches[0].pageX;
+            spot.y = touches[0].pageY;
+        } else {
             spot.x = e.pageX;
             spot.y = e.pageY;
-            e.preventDefault();
         }
-    );
-    document.addEventListener(
-        "mousemove",
-        function(e) {
-            if(e.buttons & 1) {
-                var dx = e.pageX - spot.x;
-                var dy = e.pageY - spot.y;
-                if(dy>10 && currentPlace=='main') {
-                    moveMainDown();
-                }
-                if(dy<-10 && currentPlace=='temple') {
-                    moveMainUp();
-                }
-                if(dx>10 && currentPlace=='temple') {
-                    moveToLakeLeft();
-                }
-                if(dx<-10 && currentPlace=='lake') {
-                    moveFromLakeRight();
-                }
-                if(dx<-10 && currentPlace=='temple') {
-                    moveToStatueRight();
-                }
-                if(dx>10 && currentPlace=='statue') {
-                    moveFromStatueLeft();
-                }
+        e.preventDefault();
+    }
+    
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("touchdown", onDown);
+    
+    var onMove = function(e) {
+        if(e.buttons & 1 || e.touches) {
+            var dx = (e.touches ? e.touches[0].pageX : e.pageX) - spot.x;
+            var dy = (e.touches ? e.touches[0].pageY : e.pageY) - spot.y;
+            if(dy>10 && currentPlace=='main') {
+                moveMainDown();
             }
-            e.preventDefault();
+            if(dy<-10 && currentPlace=='temple') {
+                moveMainUp();
+            }
+            if(dx>10 && currentPlace=='temple') {
+                moveToLakeLeft();
+            }
+            if(dx<-10 && currentPlace=='lake') {
+                moveFromLakeRight();
+            }
+            if(dx<-10 && currentPlace=='temple') {
+                moveToStatueRight();
+            }
+            if(dx>10 && currentPlace=='statue') {
+                moveFromStatueLeft();
+            }
         }
-    );
-    document.addEventListener(
-        "mouseup",
-        function(e) {
-            e.preventDefault();
-        }
-    );
+        e.preventDefault();
+    }    
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("touchmove", onMove);
+
     
 </script>
 
