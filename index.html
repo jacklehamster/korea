@@ -229,6 +229,7 @@ H1:hover {
         if(e.buttons & 1 || touches) {
             var dx = (touches ? touches[0].pageX : e.pageX) - spot.x;
             var dy = (touches ? touches[0].pageY : e.pageY) - spot.y;
+            console.log(touches[0].pageX,touches[0].pageY,spot);
             if(dy>10 && currentPlace=='main') {
                 moveMainDown();
             }
