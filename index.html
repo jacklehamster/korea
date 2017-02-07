@@ -222,6 +222,10 @@ H1:hover {
             main.style.top = 5+"px";
         }
         e.preventDefault();
+        if(!playing) {
+            audio.play();
+            playing = true;
+        }
     }
     
     var onUp = function(e) {
@@ -236,13 +240,13 @@ H1:hover {
     document.addEventListener("mouseup", onUp);
     document.addEventListener("touchend", onUp);
     
+    var playing = false;
     var threshold = 20;
     var onMove = function(e) {
         var touches = e.changedTouches;
         if(e.buttons & 1 || touches) {
             var dx = (touches ? touches[0].pageX : e.pageX) - spot.x;
             var dy = (touches ? touches[0].pageY : e.pageY) - spot.y;
-            console.log(touches[0].pageX,touches[0].pageY,spot);
             if(dy>threshold && currentPlace=='main') {
                 moveMainDown();
             }
@@ -270,7 +274,7 @@ H1:hover {
     
 </script>
 
-<audio autoplay="autoplay" loop="loop">
+<audio id="audio" loop="loop" autoplay="autoplay">
     <source src="song.ogg" type="audio/ogg">
     <source src="song.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
