@@ -218,34 +218,47 @@ H1:hover {
             spot.x = e.pageX;
             spot.y = e.pageY;
         }
+        if(currentPlace=='main') {
+            main.style.top = 10+"px";
+        }
         e.preventDefault();
+    }
+    
+    var onUp = function(e) {
+        if(currentPlace=='main') {
+            main.style.top = 0+"px";
+        }
+        e.preventDefault();        
     }
     
     document.addEventListener("mousedown", onDown);
     document.addEventListener("touchstart", onDown);
+    document.addEventListener("mouseup", onDown);
+    document.addEventListener("touchend", onDown);
     
+    var threshold = 20;
     var onMove = function(e) {
         var touches = e.changedTouches;
         if(e.buttons & 1 || touches) {
             var dx = (touches ? touches[0].pageX : e.pageX) - spot.x;
             var dy = (touches ? touches[0].pageY : e.pageY) - spot.y;
             console.log(touches[0].pageX,touches[0].pageY,spot);
-            if(dy>10 && currentPlace=='main') {
+            if(dy>threshold && currentPlace=='main') {
                 moveMainDown();
             }
-            if(dy<-10 && currentPlace=='temple') {
+            if(dy<-threshold && currentPlace=='temple') {
                 moveMainUp();
             }
-            if(dx>10 && currentPlace=='temple') {
+            if(dx>threshold && currentPlace=='temple') {
                 moveToLakeLeft();
             }
-            if(dx<-10 && currentPlace=='lake') {
+            if(dx<-threshold && currentPlace=='lake') {
                 moveFromLakeRight();
             }
-            if(dx<-10 && currentPlace=='temple') {
+            if(dx<-threshold && currentPlace=='temple') {
                 moveToStatueRight();
             }
-            if(dx>10 && currentPlace=='statue') {
+            if(dx>threshold && currentPlace=='statue') {
                 moveFromStatueLeft();
             }
         }
