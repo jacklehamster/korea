@@ -1,0 +1,234 @@
+
+<html>
+<body style="overflow: hidden">
+
+
+<img id="lake" src="2.jpeg" style="position:absolute; width:800px; height:500px; top:0px; left:0px">
+<img id="statue" src="4.jpeg" style="display:none; position:absolute; width:800px; height:500px; top:0px; left:0px">
+<img id="temple" src="3.jpeg" style="position:absolute; width:800px; height:500px; top:0px; left:0px">
+<img id="boy" src="boy.png" style="display:none; position:absolute; width:180px; height:400px; top:140px; left:300px">
+<img id="girl" src="girl.png" style="display:none; position:absolute; width:200px; height:360px; top:170px; left:150px">
+<img id="main" src="1.jpeg" style="position:absolute; width:800px; height:500px; top:0px; left:0px">  
+
+
+<script>
+    var speed = .2;
+    boyX = 300;
+    girlX = 150;
+    var shift = 0;
+    setInterval(
+        function() {
+            if(boy.style.display!=="none") {
+                boyX -= speed;
+                girlX -= speed;
+                boy.style.left = Math.round(shift + boyX) + "px";
+                girl.style.left = Math.round(shift + girlX) + "px";
+                if(boyX < -100) {
+                    boyX += 800;
+                }
+                if(girlX < -100) {
+                    girlX += 800;
+                } 
+            }
+        },
+        10
+    );
+    var currentPlace='main';
+    
+    function moveMainDown() {
+        currentPlace = null;
+        var top = 0;
+        boy.style.display = "";
+        girl.style.display = "";
+        var interval = setInterval(
+            function() {
+                top += 20;
+                main.style.top = top+"px";
+                if(top > window.innerHeight) {
+                    main.style.display = "none";
+                    clearInterval(interval);
+                    currentPlace = "temple";
+                }
+            },
+        10);
+    }
+    
+    function moveMainUp() {
+        currentPlace = null;
+        var top = window.innerHeight;
+        main.style.display = "";
+        var interval = setInterval(
+            function() {
+                top = Math.max(0,top-20);
+                main.style.top = top+"px";
+                if(top <= 0) {
+                    clearInterval(interval);
+                    boy.style.display = "none";
+                    girl.style.display = "none";
+                    currentPlace = "main";
+                }
+            },
+        10);
+    }
+    
+    function moveToLakeLeft() {
+        currentPlace = null;
+        var left = 0;
+        shift = 0;
+        statue.style.display = "none";
+        lake.style.display = "";
+        var interval = setInterval(
+            function() {
+                left += 20;
+                shift = left*2;
+                temple.style.left = left+"px";
+                if(left >= window.innerWidth) {
+                    clearInterval(interval);
+                    temple.style.display = "none";
+                    boy.style.display = "none";
+                    girl.style.display = "none";
+                    currentPlace = "lake";
+                }
+            },
+        10);
+    }
+    
+    function moveFromLakeRight() {
+        currentPlace = null;
+        var left = window.innerWidth;
+        temple.style.display = "";
+        boy.style.display = "";
+        girl.style.display = "";
+        shift = left*2;
+        var interval = setInterval(
+            function() {
+                left = Math.max(0, left- 20);
+                shift = left*2;
+                temple.style.left = left+"px";
+                if(left <= 0) {
+                    clearInterval(interval);
+                    currentPlace = "temple";
+                }
+            },
+        10);
+    }
+    
+    function moveToStatueRight() {
+        currentPlace = null;
+        var left = 0;
+        shift = 0;
+        statue.style.display = "";
+        lake.style.display = "none";
+        var interval = setInterval(
+            function() {
+                left -= 20;
+                shift = left*2;
+                temple.style.left = left+"px";
+                if(left <= -window.innerWidth) {
+                    clearInterval(interval);
+                    temple.style.display = "none";
+                    boy.style.display = "none";
+                    girl.style.display = "none";
+                    currentPlace = "statue";
+                }
+            },
+        10);
+    }   
+     
+    function moveFromStatueLeft() {
+        currentPlace = null;
+        var left = -window.innerWidth;
+        temple.style.display = "";
+        boy.style.display = "";
+        girl.style.display = "";
+        shift = left*2;
+        var interval = setInterval(
+            function() {
+                left = Math.min(0, left+ 20);
+                shift = left*2;
+                temple.style.left = left+"px";
+                if(left >= 0) {
+                    clearInterval(interval);
+                    currentPlace = "temple";
+                }
+            },
+        10);
+    }    
+    document.addEventListener(
+        "keydown",
+        function(e) {
+            console.log(e.keyCode);
+            if(e.keyCode===38 && currentPlace=='main') {
+                moveMainDown();
+            }
+            if(e.keyCode==40 && currentPlace=='temple') {
+                moveMainUp();
+            }
+            if(e.keyCode==37 && currentPlace=='temple') {
+                moveToLakeLeft();
+            }
+            if(e.keyCode==39 && currentPlace=='lake') {
+                moveFromLakeRight();
+            }
+            if(e.keyCode==39 && currentPlace=='temple') {
+                moveToStatueRight();
+            }
+            if(e.keyCode==37 && currentPlace=='statue') {
+                moveFromStatueLeft();
+            }
+            e.preventDefault();
+        }
+    );
+    var spot = {x:0,y:0};
+    document.addEventListener(
+        "mousedown",
+        function(e) {
+            spot.x = e.pageX;
+            spot.y = e.pageY;
+            e.preventDefault();
+        }
+    );
+    document.addEventListener(
+        "mousemove",
+        function(e) {
+            if(e.buttons & 1) {
+                var dx = e.pageX - spot.x;
+                var dy = e.pageY - spot.y;
+                if(dy>10 && currentPlace=='main') {
+                    moveMainDown();
+                }
+                if(dy<-10 && currentPlace=='temple') {
+                    moveMainUp();
+                }
+                if(dx>10 && currentPlace=='temple') {
+                    moveToLakeLeft();
+                }
+                if(dx<-10 && currentPlace=='lake') {
+                    moveFromLakeRight();
+                }
+                if(dx<-10 && currentPlace=='temple') {
+                    moveToStatueRight();
+                }
+                if(dx>10 && currentPlace=='statue') {
+                    moveFromStatueLeft();
+                }
+            }
+            e.preventDefault();
+        }
+    );
+    document.addEventListener(
+        "mouseup",
+        function(e) {
+            e.preventDefault();
+        }
+    );
+    
+</script>
+
+<audio autoplay loop>
+    <source src="song.ogg" type="audio/ogg">
+    <source src="song.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+</body>
+</html>
